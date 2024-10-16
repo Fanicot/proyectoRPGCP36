@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
 public class OrbitCamara : MonoBehaviour
 {
     private Vector2 angulo = new Vector2(90 * Mathf.Deg2Rad, 0f);
@@ -18,6 +19,7 @@ public class OrbitCamara : MonoBehaviour
     private float hor;
     [SerializeField]
     private float ver;
+  
     void Update()
     {
         hor = Input.GetAxisRaw("Mouse X");
@@ -31,7 +33,8 @@ public class OrbitCamara : MonoBehaviour
         if ( ver != 0)
         {
             angulo.y += ver * Mathf.Deg2Rad;
-            angulo.y = Mathf.Clamp(angulo.y, -35 * Mathf.Deg2Rad, 5 * Mathf.Rad2Deg);
+            angulo.y = Mathf.Clamp(angulo.y, -35 * Mathf.Deg2Rad, 5 * Mathf.Deg2Rad);
+            
         }
     }
 
