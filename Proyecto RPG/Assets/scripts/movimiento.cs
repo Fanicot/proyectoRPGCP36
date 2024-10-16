@@ -26,13 +26,15 @@ public class movimiento : MonoBehaviour
     private Vector3 direccionDash;
     private bool isDashing;
     private float dashtime;
+    private Animator anim;
 
 
 
     void Start()
     {
         jugador = GetComponent<CharacterController>();
-        
+
+        anim = GetComponent<Animator>();
     }
 
   
@@ -41,6 +43,13 @@ public class movimiento : MonoBehaviour
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
         jugadorInput = new Vector3(horizontal, 0, vertical).normalized;
+
+        if (horizontal + vertical != 0)
+        {
+            anim.SetBool("IsRunning", true);
+        }
+        else
+            anim.SetBool("IsRunning", false);
 
         if (isDashing)
         {
@@ -51,12 +60,13 @@ public class movimiento : MonoBehaviour
         {
             if (recursosPersonaje.EmpezarCorrer())
             jugadorInput = jugadorInput * 1.5f;
+            anim.SetBool("IsSprinting" , true);
         }
 
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             recursosPersonaje.DejarCorrer();
-                
+            anim.SetBool("IsSprinting" , false);
         }
 
         camFoward = Camera.main.transform.forward;
