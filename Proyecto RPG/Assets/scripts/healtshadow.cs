@@ -24,9 +24,12 @@ public class healtshadow : MonoBehaviour
     private Vector3 originalPos;
     [SerializeField]
     private float aumentoVida;
+    
+    
 
     void Start()
     {
+        vida = vidaMax;
         originalPos = rectTransform.localPosition;
         anchoBase = rectTransform.rect.width;
     }
@@ -50,6 +53,12 @@ public class healtshadow : MonoBehaviour
         currentdelay = Time.time;
     }
 
+    public void SubirVida(float t)
+    {
+        vida = t;
+        GetComponent<Image>().fillAmount = vida;
+    }
+
     public void IncrementoVida(float cantidad)
     {
         vidaMax += cantidad;
@@ -63,4 +72,6 @@ public class healtshadow : MonoBehaviour
         rectTransform.sizeDelta = new Vector2(newWidth, rectTransform.sizeDelta.y);
         rectTransform.localPosition = originalPos + new Vector3((newWidth - anchoBase) / 2, 0, 0);
     }
+
+    
 }

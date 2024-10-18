@@ -69,6 +69,11 @@ public class movimiento : MonoBehaviour
             anim.SetBool("IsSprinting" , false);
         }
 
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            anim.SetTrigger("IsAttaking");
+        }
+
         camFoward = Camera.main.transform.forward;
         camRight = Camera.main.transform.right;
         camRotation = Camera.main.transform.rotation;

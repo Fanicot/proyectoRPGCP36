@@ -7,6 +7,8 @@ public class fondoVida : MonoBehaviour
     [SerializeField]
     private float vidaMax;
     [SerializeField]
+    private float vida;
+    [SerializeField]
     private float vidaBase;
     private float anchoBase;
     [SerializeField]
@@ -14,11 +16,10 @@ public class fondoVida : MonoBehaviour
     private Vector3 originalPos;
     [SerializeField]
     private float aumentoVida;
-    [SerializeField]
-    private float vida;
 
     void Start()
     {
+        vida = vidaMax;
         originalPos = rectTransform.localPosition;
         anchoBase = rectTransform.rect.width;
     }

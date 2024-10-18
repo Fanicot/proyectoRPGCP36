@@ -85,6 +85,7 @@ public class recursosPersonaje : MonoBehaviour
     public void SumarVida(float restaurar)
     {
         vida += restaurar;
+        sombra.SubirVida(vida / vidaMax);
         if (vida > vidaMax) vida = vidaMax;
     }
 
