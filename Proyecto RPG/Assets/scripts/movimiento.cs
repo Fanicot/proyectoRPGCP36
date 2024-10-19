@@ -27,6 +27,8 @@ public class movimiento : MonoBehaviour
     private bool isDashing;
     private float dashtime;
     private Animator anim;
+    [SerializeField]
+    private bool atkReady;
 
 
 
@@ -35,6 +37,8 @@ public class movimiento : MonoBehaviour
         jugador = GetComponent<CharacterController>();
 
         anim = GetComponent<Animator>();
+
+        atkReady = false;
     }
 
   
@@ -69,9 +73,10 @@ public class movimiento : MonoBehaviour
             anim.SetBool("IsSprinting" , false);
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) && !atkReady)
         {
             anim.SetTrigger("IsAttaking");
+            atkReady = true;
         }
 
         camFoward = Camera.main.transform.forward;
@@ -133,5 +138,10 @@ public class movimiento : MonoBehaviour
         float tiempo = distancia / velocidad;
 
         return tiempo;
+    }
+
+    public void AtkReady()
+    {
+        atkReady = false;
     }
 }
