@@ -10,15 +10,19 @@ public class OrbitCamara : MonoBehaviour
     [SerializeField]
     private Transform follow;
     [SerializeField] 
+    private Transform followCam;
+    [SerializeField] 
     private float distancia;
-    [SerializeField]
-    private float mCam;
     [SerializeField]
     private Transform jugador;
     [SerializeField]
     private float hor;
     [SerializeField]
     private float ver;
+    [SerializeField]
+    private bool LockCam;
+    [SerializeField]
+    private Transform enemigo;
   
     void Update()
     {
@@ -47,5 +51,14 @@ public class OrbitCamara : MonoBehaviour
 
         transform.position = follow.position + orbita * distancia;
         transform.rotation = Quaternion.LookRotation(follow.position - transform.position);
+
+        if (LockCam)
+        {
+            transform.position = followCam.position;
+            transform.LookAt(enemigo);
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+            LockCam = !LockCam;
     }
 }
