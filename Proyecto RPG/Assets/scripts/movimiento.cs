@@ -48,12 +48,15 @@ public class movimiento : MonoBehaviour
         vertical = Input.GetAxisRaw("Vertical");
         jugadorInput = new Vector3(horizontal, 0, vertical).normalized;
 
-        if (horizontal + vertical != 0)
+        if (horizontal != 0 || vertical != 0)
         {
             anim.SetBool("IsRunning", true);
         }
         else
+        {
+            anim.SetBool("IsSprinting", false);
             anim.SetBool("IsRunning", false);
+        }
 
         if (isDashing)
         {
@@ -62,9 +65,14 @@ public class movimiento : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            if (recursosPersonaje.EmpezarCorrer())
-            jugadorInput = jugadorInput * 1.5f;
-            anim.SetBool("IsSprinting" , true);
+            if (horizontal != 0 || vertical != 0)
+            {
+                if (recursosPersonaje.EmpezarCorrer())
+                {
+                    jugadorInput = jugadorInput * 1.5f;
+                    anim.SetBool("IsSprinting", true);
+                }
+            }
         }
 
         if (Input.GetKeyUp(KeyCode.LeftShift))
@@ -73,7 +81,7 @@ public class movimiento : MonoBehaviour
             anim.SetBool("IsSprinting" , false);
         }
 
-        if (Input.GetKeyDown(KeyCode.F) && !atkReady)
+        if (Input.GetKeyDown(KeyCode.G) && !atkReady)
         {
             anim.SetTrigger("IsAttaking");
             atkReady = true;
