@@ -49,7 +49,7 @@ public class EnemigoMov : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Jugador"))
         {
             jugadorEnRango = true;
         }
@@ -57,7 +57,7 @@ public class EnemigoMov : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("player"))
+        if (other.CompareTag("Jugador"))
         {
             jugadorEnRango = false;
             persiguiendo = false;
