@@ -16,11 +16,15 @@ public class EnemigoMov : MonoBehaviour
     private bool persiguiendo = false;
     [SerializeField]
     private bool jugadorEnRango = false;
+    private Animator anim;
 
 
     void Start()
     {
         enemigo = GetComponent<NavMeshAgent>();
+
+        anim = GetComponent<Animator>();
+
         enemigo.autoBraking = false;
 
         IrAlSiguientePunto();
@@ -44,6 +48,8 @@ public class EnemigoMov : MonoBehaviour
         enemigo.destination = PuntosPatrulla[PuntoActual].position;
 
         PuntoActual = (PuntoActual + 1) % PuntosPatrulla.Length;
+
+        anim.SetBool("seguir", false);
     }
 
 
@@ -61,6 +67,7 @@ public class EnemigoMov : MonoBehaviour
         {
             jugadorEnRango = false;
             persiguiendo = false;
+            enemigo.speed = 3.5f;
             IrAlSiguientePunto();
         }
     }
@@ -69,5 +76,7 @@ public class EnemigoMov : MonoBehaviour
     {
         persiguiendo = true;
         enemigo.destination = jugador.position;
+        enemigo.speed = 6f;
+        anim.SetBool("seguir", true);
     }
 }
