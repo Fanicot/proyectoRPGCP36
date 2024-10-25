@@ -91,10 +91,10 @@ public class recursosPersonaje : MonoBehaviour
 
     public void CambioVida()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        /*if (Input.GetKeyDown(KeyCode.Q))
         {
             RestarVida(daño);
-        }
+        }*/
         if (Input.GetKeyDown(KeyCode.R))
         {
             SumarVida(restaurarVida);

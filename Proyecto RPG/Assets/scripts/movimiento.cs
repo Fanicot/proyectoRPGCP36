@@ -81,7 +81,7 @@ public class movimiento : MonoBehaviour
             anim.SetBool("IsSprinting" , false);
         }
 
-        if (Input.GetKeyDown(KeyCode.G) && !atkReady)
+        if (Input.GetButtonDown("Fire1") && !atkReady)
         {
             anim.SetTrigger("IsAttaking");
             atkReady = true;

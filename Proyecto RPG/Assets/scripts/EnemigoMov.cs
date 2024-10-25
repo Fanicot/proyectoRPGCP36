@@ -17,7 +17,14 @@ public class EnemigoMov : MonoBehaviour
     [SerializeField]
     private bool jugadorEnRango = false;
     private Animator anim;
+    
 
+    [SerializeField]
+    private float vida;
+    private float daño = 10;
+    private float rangoAtaque = 5;
+    [SerializeField]
+    private recursosPersonaje recursosJugador;
 
     void Start()
     {
@@ -25,19 +32,29 @@ public class EnemigoMov : MonoBehaviour
 
         anim = GetComponent<Animator>();
 
-        enemigo.autoBraking = false;
+        
 
         IrAlSiguientePunto();
     }
 
     void Update()
     {
-        if (jugadorEnRango)
-            PerseguirJugador();
 
-        if (!enemigo.pathPending && enemigo.remainingDistance < 0.5f)
+        float distancia = Vector3.Distance(transform.position, jugador.position);
+
+        if (jugadorEnRango)
+
+            PerseguirJugador();
+        
+
+        else if (!enemigo.pathPending && enemigo.remainingDistance <= enemigo.stoppingDistance)
         {
             IrAlSiguientePunto();
+        }
+
+        if (distancia <= rangoAtaque)
+        {
+            anim.Play("Zombie Attack");
         }
     }
 
@@ -78,5 +95,15 @@ public class EnemigoMov : MonoBehaviour
         enemigo.destination = jugador.position;
         enemigo.speed = 6f;
         anim.SetBool("seguir", true);
+    }
+
+    public void RealizarDaño()
+    {
+        recursosJugador.RestarVida(daño);
+    }
+
+    void animAttack()
+    {
+        anim.SetBool("IsAttack", true);
     }
 }
