@@ -65,9 +65,12 @@ public class recursosPersonaje : MonoBehaviour
         }
         barradevida.fillAmount = vida / vidaMax;
         barradestamina.fillAmount = stamina / staminaMax;
-        CambioVida();
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SumarVida(restaurarVida);
+        }
         CambioStamina();
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             IncrementoVida(aumentoVida);
         }
@@ -88,21 +91,6 @@ public class recursosPersonaje : MonoBehaviour
         sombra.SubirVida(vida / vidaMax);
         if (vida > vidaMax) vida = vidaMax;
     }
-
-    public void CambioVida()
-    {
-        /*if (Input.GetKeyDown(KeyCode.Q))
-        {
-            RestarVida(daño);
-        }*/
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            SumarVida(restaurarVida);
-        }
-
-        
-    }
-
     public void CambioStamina()
     {
 

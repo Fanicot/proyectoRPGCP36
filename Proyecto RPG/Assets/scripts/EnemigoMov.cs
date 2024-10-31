@@ -13,68 +13,131 @@ public class EnemigoMov : MonoBehaviour
     [SerializeField]
     private Transform jugador;
     [SerializeField]
-    private bool persiguiendo = false;
-    [SerializeField]
     private bool jugadorEnRango = false;
     private Animator anim;
-    
 
     [SerializeField]
     private float vida;
     private float daño = 10;
-    private float rangoAtaque = 5;
+    private float rangoAtaque = 2f;
     [SerializeField]
     private recursosPersonaje recursosJugador;
+
+    public enum EstadoEnemigo { Patrulla, Perseguir, DetenidoParaAtacar, Atacando, Retroceder }
+    private EstadoEnemigo estadoActual = EstadoEnemigo.Patrulla;
+
+    
+    private float tiempoDetenidoAntesdeAtacar = 1.5f;
+    private float tiempoEsperaProximoAtaque = 2f;
+    private Vector3 posicionRetroceso;
 
     void Start()
     {
         enemigo = GetComponent<NavMeshAgent>();
-
         anim = GetComponent<Animator>();
-
-        
-
         IrAlSiguientePunto();
     }
 
     void Update()
     {
-
         float distancia = Vector3.Distance(transform.position, jugador.position);
 
-        if (jugadorEnRango)
-
-            PerseguirJugador();
-        
-
-        else if (!enemigo.pathPending && enemigo.remainingDistance <= enemigo.stoppingDistance)
+        switch (estadoActual)
         {
-            IrAlSiguientePunto();
+            case EstadoEnemigo.Patrulla:
+                if (jugadorEnRango)
+                {
+                    estadoActual = EstadoEnemigo.Perseguir;
+                    anim.SetBool("seguir", true);
+                }
+                else if (!enemigo.pathPending && enemigo.remainingDistance <= enemigo.stoppingDistance)
+                    IrAlSiguientePunto();
+                break;
+
+            case EstadoEnemigo.Perseguir:
+                if (distancia <= rangoAtaque)
+                {
+                    estadoActual = EstadoEnemigo.DetenidoParaAtacar;
+                    enemigo.isStopped = true;
+                    anim.SetBool("seguir", false);
+                    Invoke("DetenerAntesDeAtacar", tiempoDetenidoAntesdeAtacar);
+                }
+                else
+                {
+                    enemigo.destination = jugador.position;
+                    anim.SetBool("seguir", true);
+                }
+                break;
+
+            case EstadoEnemigo.DetenidoParaAtacar:
+                break;
+
+            case EstadoEnemigo.Atacando:
+                anim.Play("Zombie Attack");
+                posicionRetroceso = transform.position - (jugador.position - transform.position).normalized * 3.5f;
+                Invoke("IniciarRetroceso", 1.3f);
+                break;
+
+            case EstadoEnemigo.Retroceder:
+                enemigo.destination = posicionRetroceso;
+                EsperarProximoAtaqueAux();
+                break;
         }
+    }
 
-        if (distancia <= rangoAtaque)
+    private void DetenerAntesDeAtacar()
+    {
+        estadoActual = EstadoEnemigo.Atacando;
+    }
+
+    private void IniciarRetroceso()
+    {
+        estadoActual = EstadoEnemigo.Retroceder;
+        enemigo.isStopped = false;
+    }
+
+    public void EsperarProximoAtaqueAux() 
+    {
+        if (Vector3.Distance(transform.position, posicionRetroceso) >= 3.5f && !enemigo.isStopped)
         {
-            anim.Play("Zombie Attack");
+            Invoke("EsperarProximoAtaque", tiempoEsperaProximoAtaque);
+            enemigo.isStopped = true;
+        }
+    }
+
+    private void EsperarProximoAtaque()
+    {
+      
+       
+        
+        if (jugadorEnRango)
+        {
+            estadoActual = EstadoEnemigo.Perseguir;
+            enemigo.isStopped = false;
+        }
+        
+        else
+        {
+            estadoActual = EstadoEnemigo.Patrulla;
+            IrAlSiguientePunto();
         }
     }
 
     public void IrAlSiguientePunto()
     {
         if (PuntosPatrulla.Length == 0) return;
-
         enemigo.destination = PuntosPatrulla[PuntoActual].position;
-
         PuntoActual = (PuntoActual + 1) % PuntosPatrulla.Length;
-
         anim.SetBool("seguir", false);
     }
-
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Jugador"))
         {
             jugadorEnRango = true;
+            estadoActual = EstadoEnemigo.Perseguir;
+            anim.SetBool("seguir", true);
         }
     }
 
@@ -83,27 +146,15 @@ public class EnemigoMov : MonoBehaviour
         if (other.CompareTag("Jugador"))
         {
             jugadorEnRango = false;
-            persiguiendo = false;
+            estadoActual = EstadoEnemigo.Patrulla;
+            anim.SetBool("seguir", false);
             enemigo.speed = 3.5f;
             IrAlSiguientePunto();
         }
     }
 
-    public void PerseguirJugador()
-    {
-        persiguiendo = true;
-        enemigo.destination = jugador.position;
-        enemigo.speed = 6f;
-        anim.SetBool("seguir", true);
-    }
-
     public void RealizarDaño()
     {
         recursosJugador.RestarVida(daño);
-    }
-
-    void animAttack()
-    {
-        anim.SetBool("IsAttack", true);
     }
 }
