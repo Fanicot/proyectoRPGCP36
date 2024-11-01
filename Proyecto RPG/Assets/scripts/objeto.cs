@@ -9,10 +9,8 @@ public class objeto : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Colisión detectada con: " + other.gameObject.name);
         if (other.CompareTag("Jugador"))
         {
-            Debug.Log("entro");
             if (InventarioJugador.EnInventario == false)
             {
                 gameObject.SetActive(false);

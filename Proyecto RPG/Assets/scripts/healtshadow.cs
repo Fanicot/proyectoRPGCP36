@@ -40,7 +40,7 @@ public class healtshadow : MonoBehaviour
         ready = Time.time > currentdelay + delay;
         if (ready)
             GetComponent<Image>().fillAmount = Mathf.Max(Mathf.Lerp(GetComponent<Image>().fillAmount, 0f, speed * Time.deltaTime), vida);
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             IncrementoVida(aumentoVida);
         }
