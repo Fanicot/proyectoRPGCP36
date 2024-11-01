@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class movimiento : MonoBehaviour
 {
@@ -30,6 +31,10 @@ public class movimiento : MonoBehaviour
     [SerializeField]
     private bool atkReady;
 
+    [SerializeField]
+    private GameObject cofre;
+    public AnimationCurve curva;
+
 
 
     void Start()
@@ -44,6 +49,9 @@ public class movimiento : MonoBehaviour
   
     void Update()
     {
+
+        float distanciaCofre = Vector3.Distance(transform.position, cofre.transform.position);
+
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
         jugadorInput = new Vector3(horizontal, 0, vertical).normalized;
@@ -139,6 +147,13 @@ public class movimiento : MonoBehaviour
 
         jugador.Move(mov * Time.deltaTime);
         jugador.transform.rotation = camRotation;
+
+
+        if (Input.GetKeyDown(KeyCode.G) && distanciaCofre < 5f)
+        {
+            Interpolacion(transform.position, cofre.transform.position, 2f, transform.gameObject);
+        }
+
     }
 
     public float DashTime(float velocidad, float distancia)
@@ -151,5 +166,27 @@ public class movimiento : MonoBehaviour
     public void AtkReady()
     {
         atkReady = false;
+    }
+
+    public IEnumerator LerpInterp(Vector3 posIni, Vector3 PosFin, float timpoMov, GameObject cofre)
+    {
+        float timePassed = 0f;
+
+        Debug.Log(timePassed / timpoMov);
+
+        while (timePassed < timpoMov)
+        {
+            cofre.transform.position = Vector3.Lerp(posIni, PosFin,
+                curva.Evaluate(timePassed / timpoMov));
+
+            timePassed += Time.deltaTime;
+
+            yield return null;
+        }
+    }
+
+    public void Interpolacion(Vector3 posIni, Vector3 PosFin, float timpoMov, GameObject cofre)
+    {
+        StartCoroutine(LerpInterp(posIni, PosFin, timpoMov, cofre));
     }
 }
