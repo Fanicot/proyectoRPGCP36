@@ -44,7 +44,6 @@ public class healtshadow : MonoBehaviour
         {
             IncrementoVida(aumentoVida);
         }
-        
     }
 
     public void bajarVida(float t)

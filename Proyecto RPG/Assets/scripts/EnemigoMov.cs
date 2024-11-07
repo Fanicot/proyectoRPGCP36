@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using TMPro;
 
 public class EnemigoMov : MonoBehaviour
 {
@@ -23,6 +24,10 @@ public class EnemigoMov : MonoBehaviour
     [SerializeField]
     private recursosPersonaje recursosJugador;
 
+    public DeteccionEnemigo DeteccionEnemigo;
+
+    public TextMeshProUGUI prueba;
+
     public enum EstadoEnemigo { Patrulla, Perseguir, DetenidoParaAtacar, Atacando, Retroceder }
     private EstadoEnemigo estadoActual = EstadoEnemigo.Patrulla;
 
@@ -41,6 +46,23 @@ public class EnemigoMov : MonoBehaviour
     void Update()
     {
         float distancia = Vector3.Distance(transform.position, jugador.position);
+        prueba.text = estadoActual.ToString();
+        if (DeteccionEnemigo.hayAlgo && estadoActual == EstadoEnemigo.Patrulla)
+        {
+            jugadorEnRango = true;
+            estadoActual = EstadoEnemigo.Perseguir;
+            anim.SetBool("seguir", true);
+            DeteccionEnemigo.angulo = 360f;
+        }
+        else if(!DeteccionEnemigo.hayAlgo && estadoActual != EstadoEnemigo.Patrulla)
+        {
+            jugadorEnRango = false;
+            estadoActual = EstadoEnemigo.Patrulla;
+            anim.SetBool("seguir", false);
+            enemigo.speed = 3.5f;
+            
+            DeteccionEnemigo.angulo = DeteccionEnemigo.anguloOriginal;
+        }
 
         switch (estadoActual)
         {
@@ -131,7 +153,7 @@ public class EnemigoMov : MonoBehaviour
         anim.SetBool("seguir", false);
     }
 
-    private void OnTriggerEnter(Collider other)
+    /*private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Jugador"))
         {
@@ -139,9 +161,9 @@ public class EnemigoMov : MonoBehaviour
             estadoActual = EstadoEnemigo.Perseguir;
             anim.SetBool("seguir", true);
         }
-    }
+    }*/
 
-    private void OnTriggerExit(Collider other)
+    /*private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Jugador"))
         {
@@ -151,7 +173,7 @@ public class EnemigoMov : MonoBehaviour
             enemigo.speed = 3.5f;
             IrAlSiguientePunto();
         }
-    }
+    }*/
 
     public void RealizarDaño()
     {

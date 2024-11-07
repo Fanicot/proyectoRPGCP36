@@ -7,11 +7,12 @@ TagManager:
   - Enemy
   - Jugador
   - espada
+  - curacion
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Obstaculo
   - Water
   - UI
   - 

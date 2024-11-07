@@ -7,10 +7,8 @@ using UnityEngine.UI;
 public class recursosPersonaje : MonoBehaviour
 {
     [Header("Vida, Stamina")]
-    [SerializeField]
-    private float vida;
-    [SerializeField]
-    private float vidaMax = 100;
+    public float vida;
+    public float vidaMax = 100;
     [SerializeField]
     private float aumentoVida;
     [SerializeField]
@@ -19,8 +17,8 @@ public class recursosPersonaje : MonoBehaviour
     private float staminaMax = 100;
     [SerializeField]
     private Image barradevida, barradestamina;
-    private float daño = 10;
-    private float restaurarVida = 10;
+    
+    
 
     [Header("Costo, recarga")]
     [SerializeField]
@@ -65,10 +63,6 @@ public class recursosPersonaje : MonoBehaviour
         }
         barradevida.fillAmount = vida / vidaMax;
         barradestamina.fillAmount = stamina / staminaMax;
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            SumarVida(restaurarVida);
-        }
         CambioStamina();
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -85,24 +79,15 @@ public class recursosPersonaje : MonoBehaviour
 
     }
 
-    public void SumarVida(float restaurar)
+    /*public void SumarVida(float restaurar)
     {
-        vida += restaurar;
+
+        if (vida > vidaMax) 
+            vida = vidaMax;
         sombra.SubirVida(vida / vidaMax);
-        if (vida > vidaMax) vida = vidaMax;
-    }
+    }*/
     public void CambioStamina()
     {
-
-        /*if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            corriendo = true;
-        }
-        else if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            corriendo = false;
-        }*/
-
         if (corriendo)
         {
             if (stamina > 0)
@@ -121,8 +106,7 @@ public class recursosPersonaje : MonoBehaviour
         }
 
         if (!corriendo)
-        {
-            
+        { 
            if (!corrutina)
             recarga = StartCoroutine(RecargaStam());
         }
