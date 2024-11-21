@@ -17,8 +17,14 @@ public class recursosPersonaje : MonoBehaviour
     private float staminaMax = 100;
     [SerializeField]
     private Image barradevida, barradestamina;
-    
-    
+
+    [Header("Curacion")]
+    public float cantidadcuracion = 20;
+    private int frascosMax = 3;
+    [SerializeField]
+    private int frascosActuales;
+    [SerializeField]
+    private float tiempoCuracion;
 
     [Header("Costo, recarga")]
     [SerializeField]
@@ -33,14 +39,14 @@ public class recursosPersonaje : MonoBehaviour
     [SerializeField]
     private bool sprintReady;
     private bool corrutina;
-    
+
     [Header("Canvas")]
     [SerializeField]
     private healtshadow sombra;
     private Vector3 originalPos;
     [SerializeField]
     private float vidaBase;
-    private float anchoBase; 
+    private float anchoBase;
     [SerializeField]
     private RectTransform rectTransform;
 
@@ -52,6 +58,7 @@ public class recursosPersonaje : MonoBehaviour
         stamina = staminaMax;
         originalPos = rectTransform.localPosition;
         anchoBase = rectTransform.rect.width;
+        frascosActuales = frascosMax;
     }
 
 
@@ -68,24 +75,15 @@ public class recursosPersonaje : MonoBehaviour
         {
             IncrementoVida(aumentoVida);
         }
+
+        if (Input.GetKeyDown(KeyCode.R) && frascosActuales > 0 && vida < vidaMax)
+        {
+            StartCoroutine(Curacion(vida, cantidadcuracion, tiempoCuracion));
+            frascosActuales--;
+        }
     }
 
-    public void RestarVida(float daño)
-    {
-        
-        vida -= daño;
-        sombra.bajarVida(vida / vidaMax);
-        if (vida < 0) vida = 0;
-
-    }
-
-    /*public void SumarVida(float restaurar)
-    {
-
-        if (vida > vidaMax) 
-            vida = vidaMax;
-        sombra.SubirVida(vida / vidaMax);
-    }*/
+    #region stamina
     public void CambioStamina()
     {
         if (corriendo)
@@ -106,12 +104,12 @@ public class recursosPersonaje : MonoBehaviour
         }
 
         if (!corriendo)
-        { 
-           if (!corrutina)
-            recarga = StartCoroutine(RecargaStam());
+        {
+            if (!corrutina)
+                recarga = StartCoroutine(RecargaStam());
         }
-    }   
-    
+    }
+
     public IEnumerator RecargaStam()
     {
         corrutina = true;
@@ -119,39 +117,19 @@ public class recursosPersonaje : MonoBehaviour
 
         while (stamina < staminaMax && !corriendo)
         {
-            
+
             stamina += recargaStarmina / 10f;
             if (stamina > staminaMax) stamina = staminaMax;
             barradestamina.fillAmount = stamina / staminaMax;
-            yield return new WaitForSeconds(.02f);  
+            yield return new WaitForSeconds(.02f);
         }
         corrutina = false;
     }
-
-    public void IncrementoVida(float cantidad)
-    {
-        vidaMax += cantidad;
-        vida = vidaMax;
-        IncrementoBarraVida();
-    }
-
-    public void IncrementoBarraVida() 
-    {
-        //Debug.Log("originalPos: " + originalPos + " basehp: " + basehp + " anchoBase: " + anchoBase);
-        float newWidth = (vidaMax / vidaBase) * anchoBase;
-        //Debug.Log("newWidth: " + newWidth);
-        //Debug.Log("ecuacion: " + new Vector3((newWidth - anchoBase / 2), 0, 0));
-        rectTransform.sizeDelta = new Vector2 (newWidth, rectTransform.sizeDelta.y);
-        rectTransform.localPosition = originalPos + new Vector3((newWidth - anchoBase) / 2, 0 , 0);
-        //rectTransform.rect.Set((newWidth - anchoBase /2) + originalPos.x, rectTransform.rect.y, newWidth, rectTransform.rect.height);
-        //Debug.Log(rectTransform.position);Debug.Log(originalPos);
-    }
-
     public bool EmpezarCorrer()
     {
         if (sprintReady)
         {
-            corriendo= true;
+            corriendo = true;
         }
 
 
@@ -163,4 +141,55 @@ public class recursosPersonaje : MonoBehaviour
     {
         corriendo = false;
     }
-}
+
+    #endregion stamina
+    #region vida
+    public void RestarVida(float daño)
+    {
+        vida -= daño;
+        sombra.bajarVida(vida / vidaMax);
+        if (vida < 0) vida = 0;
+    }
+    public void IncrementoVida(float cantidad)
+    {
+        vidaMax += cantidad;
+        vida = vidaMax;
+        IncrementoBarraVida();
+    }
+    public void IncrementoBarraVida()
+    {
+        float newWidth = (vidaMax / vidaBase) * anchoBase;
+        rectTransform.sizeDelta = new Vector2(newWidth, rectTransform.sizeDelta.y);
+        rectTransform.localPosition = originalPos + new Vector3((newWidth - anchoBase) / 2, 0, 0);
+    }
+
+    public void RecargarCuras()
+    {
+        frascosActuales = frascosMax;
+    }
+
+    public int ObtenerFrascosActuales()
+    {
+        return frascosActuales;
+    }
+    public void AumentarCura()
+    {
+        frascosActuales++;
+        frascosMax++;
+    }
+
+    public IEnumerator Curacion(float vidaActual, float Curacion, float tiempoCuracion)
+    {
+        float tiempoTranscurrido = 0f;
+        Curacion = vida + cantidadcuracion;
+
+        while (tiempoTranscurrido < tiempoCuracion)
+        {
+            vida = Mathf.Lerp(vidaActual, Curacion, tiempoTranscurrido / tiempoCuracion);
+            tiempoTranscurrido += Time.deltaTime;
+            if (vida > vidaMax) vida = vidaMax;
+            yield return null;
+        }
+    }
+#endregion
+}    

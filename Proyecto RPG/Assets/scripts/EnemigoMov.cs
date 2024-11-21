@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using TMPro;
 
 public class EnemigoMov : MonoBehaviour
 {
@@ -25,9 +24,7 @@ public class EnemigoMov : MonoBehaviour
     private recursosPersonaje recursosJugador;
 
     public DeteccionEnemigo DeteccionEnemigo;
-
-    public TextMeshProUGUI prueba;
-
+    
     public enum EstadoEnemigo { Patrulla, Perseguir, DetenidoParaAtacar, Atacando, Retroceder }
     private EstadoEnemigo estadoActual = EstadoEnemigo.Patrulla;
 
@@ -46,7 +43,6 @@ public class EnemigoMov : MonoBehaviour
     void Update()
     {
         float distancia = Vector3.Distance(transform.position, jugador.position);
-        prueba.text = estadoActual.ToString();
         if (DeteccionEnemigo.hayAlgo && estadoActual == EstadoEnemigo.Patrulla)
         {
             jugadorEnRango = true;
@@ -59,9 +55,15 @@ public class EnemigoMov : MonoBehaviour
             jugadorEnRango = false;
             estadoActual = EstadoEnemigo.Patrulla;
             anim.SetBool("seguir", false);
-            enemigo.speed = 3.5f;
+            enemigo.speed = 2.5f;
             
             DeteccionEnemigo.angulo = DeteccionEnemigo.anguloOriginal;
+        }
+
+        if (vida <= 0)
+        {
+            enemigo.isStopped = true;
+            anim.SetBool("derrotado", true);
         }
 
         switch (estadoActual)
@@ -87,6 +89,7 @@ public class EnemigoMov : MonoBehaviour
                 else
                 {
                     enemigo.destination = jugador.position;
+                    enemigo.speed = 5f; 
                     anim.SetBool("seguir", true);
                 }
                 break;
@@ -129,9 +132,6 @@ public class EnemigoMov : MonoBehaviour
 
     private void EsperarProximoAtaque()
     {
-      
-       
-        
         if (jugadorEnRango)
         {
             estadoActual = EstadoEnemigo.Perseguir;
@@ -152,29 +152,6 @@ public class EnemigoMov : MonoBehaviour
         PuntoActual = (PuntoActual + 1) % PuntosPatrulla.Length;
         anim.SetBool("seguir", false);
     }
-
-    /*private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Jugador"))
-        {
-            jugadorEnRango = true;
-            estadoActual = EstadoEnemigo.Perseguir;
-            anim.SetBool("seguir", true);
-        }
-    }*/
-
-    /*private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Jugador"))
-        {
-            jugadorEnRango = false;
-            estadoActual = EstadoEnemigo.Patrulla;
-            anim.SetBool("seguir", false);
-            enemigo.speed = 3.5f;
-            IrAlSiguientePunto();
-        }
-    }*/
-
     public void RealizarDaño()
     {
         recursosJugador.RestarVida(daño);

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.UI;
 
 public class movimiento : MonoBehaviour
 {
@@ -11,8 +12,8 @@ public class movimiento : MonoBehaviour
     private Vector3 camFoward;
     private Vector3 camRight;
     private Quaternion camRotation;
-    [SerializeField] 
-    private float gravedad;
+    private float gravedad = -9.8f;
+    private float velocidadVertical = 0f;
     private float horizontal;
     private float vertical;
     private Vector3 jugadorInput;
@@ -29,26 +30,29 @@ public class movimiento : MonoBehaviour
     private float dashtime;
     private Animator anim;
     [SerializeField]
-    private bool atkReady;
+    private LayerMask mask;
+    private bool estaenSuelo;
+    [SerializeField]
+    private GameObject rayoSuelo;
+    [SerializeField] 
+    private float alturaSuelo;
 
     [SerializeField]
     private GameObject cofre;
     public AnimationCurve curva;
-
-
 
     void Start()
     {
         jugador = GetComponent<CharacterController>();
 
         anim = GetComponent<Animator>();
-
-        atkReady = false;
     }
 
   
     void Update()
     {
+        estaenSuelo = Physics.Raycast(rayoSuelo.transform.position, Vector3.down, alturaSuelo, mask);
+        Debug.DrawLine(rayoSuelo.transform.position, transform.position + (Vector3.down * alturaSuelo), Color.red);
 
         float distanciaCofre = Vector3.Distance(transform.position, cofre.transform.position);
 
@@ -89,12 +93,6 @@ public class movimiento : MonoBehaviour
             anim.SetBool("IsSprinting" , false);
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && !atkReady)
-        {
-            anim.SetTrigger("IsAttaking");
-            atkReady = true;
-        }
-
         camFoward = Camera.main.transform.forward;
         camRight = Camera.main.transform.right;
         camRotation = Camera.main.transform.rotation;
@@ -109,8 +107,14 @@ public class movimiento : MonoBehaviour
 
         mov = jugadorInput.x * camRight * velocidad  + jugadorInput.z * camFoward * velocidad ;
         
-        
-        mov.y += gravedad * Time.deltaTime;
+        if (!jugador.isGrounded)
+        {
+            velocidadVertical += gravedad * Time.deltaTime;
+        }
+        else 
+            velocidadVertical = 0;
+
+        mov.y += velocidadVertical;
         
         if (isDashing)
         {
@@ -153,7 +157,6 @@ public class movimiento : MonoBehaviour
         {
             Interpolacion(transform.position, cofre.transform.position, 2f, transform.gameObject);
         }
-
     }
 
     public float DashTime(float velocidad, float distancia)
@@ -161,11 +164,6 @@ public class movimiento : MonoBehaviour
         float tiempo = distancia / velocidad;
 
         return tiempo;
-    }
-
-    public void AtkReady()
-    {
-        atkReady = false;
     }
 
     public IEnumerator LerpInterp(Vector3 posIni, Vector3 PosFin, float timpoMov, GameObject cofre)

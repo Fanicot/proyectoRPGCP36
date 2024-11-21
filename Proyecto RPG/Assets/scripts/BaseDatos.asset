@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cea92499f7432c4b8f1e9cfe6f78ada, type: 3}
+  m_Name: BaseDatos
+  m_EditorClassIdentifier: 
+  baseDatos:
+  - nombre: Espada Larga
+    ID: 1
+    icono: {fileID: 21300000, guid: c0ea4b6e528e7fe4aa6cdc94d38691a1, type: 3}
+    tipo: 1
+    acumulable: 0
+    descripcion: Espada de gran filo y alcance
+  - nombre: Espada Corta
+    ID: 2
+    icono: {fileID: 21300000, guid: 789e518168d493d4396ec984b1b5bcb3, type: 3}
+    tipo: 1
+    acumulable: 0
+    descripcion: Espada de menor rango con mas agilidad
+  - nombre: Hacha
+    ID: 3
+    icono: {fileID: 21300000, guid: 556def944fd02f54c98ac89a1fd817a7, type: 3}
+    tipo: 1
+    acumulable: 0
+    descripcion: Hacha de una mano
+  - nombre: Piedra de Curacion
+    ID: 4
+    icono: {fileID: 21300000, guid: b7d19ec039fa7b141bd165aa95496c75, type: 3}
+    tipo: 0
+    acumulable: 1
+    descripcion: Una piedra que proporciona una curacion lenta
