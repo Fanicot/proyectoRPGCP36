@@ -90,7 +90,7 @@ public class InventarioJugador : MonoBehaviour
                 {
                     if (resultado.gameObject.tag == "slot")
                     {
-                        if (resultado.gameObject.GetComponentInChildren<item>() == null) 
+                        if (resultado.gameObject.GetComponentInChildren<item>() == null)
                         {
                             ObjetoSeleccionado.transform.SetParent(resultado.gameObject.transform);
                             ObjetoSeleccionado.transform.localPosition = Vector2.zero;
@@ -98,15 +98,26 @@ public class InventarioJugador : MonoBehaviour
                         }
 
                         else if (resultado.gameObject.GetComponentInChildren<item>().ID == ObjetoSeleccionado.GetComponent<item>().ID)
-                            {
-                                resultado.gameObject.GetComponentInChildren<item>().cantidad += ObjetoSeleccionado.GetComponent<item>().cantidad;
-                                Destroy(ObjetoSeleccionado.gameObject);
-                            }
+                        {
+                            resultado.gameObject.GetComponentInChildren<item>().cantidad += ObjetoSeleccionado.GetComponent<item>().cantidad;
+                            Destroy(ObjetoSeleccionado.gameObject);
+                        }
 
                         else
                         {
                             ObjetoSeleccionado.transform.SetParent(ExParent);
                             ObjetoSeleccionado.transform.localPosition = Vector2.zero;
+                        }
+                    }
+
+                    else if (resultado.gameObject.tag == "equipar")
+                    {
+                        if (resultado.gameObject.GetComponentInChildren<item>() == null)
+                        {
+                            ObjetoSeleccionado.transform.SetParent(resultado.gameObject.transform);
+                            ObjetoSeleccionado.transform.localPosition = Vector2.zero;
+                            ExParent = ObjetoSeleccionado.transform.parent.transform;
+                            resultado.gameObject.transform.GetChild(0).gameObject.SetActive(false);
                         }
                     }
 

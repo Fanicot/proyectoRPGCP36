@@ -13,8 +13,7 @@ public class recursosPersonaje : MonoBehaviour
     private float aumentoVida;
     [SerializeField]
     private float stamina;
-    [SerializeField]
-    private float staminaMax = 100;
+    public float staminaMax = 100;
     [SerializeField]
     private Image barradevida, barradestamina;
 

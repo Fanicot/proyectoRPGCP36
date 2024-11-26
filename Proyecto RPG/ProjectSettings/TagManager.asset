@@ -8,6 +8,7 @@ TagManager:
   - Jugador
   - espada
   - slot
+  - equipar
   layers:
   - Default
   - TransparentFX
