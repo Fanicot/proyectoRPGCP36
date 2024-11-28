@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemigoMov : MonoBehaviour
+public class EnemigoMov : MonoBehaviour, Damager, damagable
 {
     [SerializeField]
     private Transform[] PuntosPatrulla;
@@ -18,7 +18,7 @@ public class EnemigoMov : MonoBehaviour
 
     [SerializeField]
     private float vida;
-    private float daño = 10;
+    public int daño = 10;
     private float rangoAtaque = 2f;
     [SerializeField]
     private recursosPersonaje recursosJugador;
@@ -152,8 +152,14 @@ public class EnemigoMov : MonoBehaviour
         PuntoActual = (PuntoActual + 1) % PuntosPatrulla.Length;
         anim.SetBool("seguir", false);
     }
-    public void RealizarDaño()
+
+    public int getDamage()
     {
-        recursosJugador.RestarVida(daño);
+        return daño;
+    }
+
+    public void getDamaged(int daño)
+    {
+        vida -= daño;
     }
 }

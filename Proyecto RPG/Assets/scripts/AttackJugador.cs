@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class AttackJugador : MonoBehaviour
+public class AttackJugador : MonoBehaviour, Damager
 {
     private Animator anim;
     public int estado = 0;
@@ -12,6 +12,8 @@ public class AttackJugador : MonoBehaviour
     private bool espada = false;
     private bool hacha = false;
     private bool espadaLarga = false;
+    [SerializeField]
+    private int[] daños;
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -104,4 +106,8 @@ public class AttackJugador : MonoBehaviour
         atkReady = false;
     }
 
+    public int getDamage()
+    {
+        return daños[estado];
+    }
 }

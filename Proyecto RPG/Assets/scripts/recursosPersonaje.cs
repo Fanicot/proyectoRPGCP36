@@ -4,7 +4,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class recursosPersonaje : MonoBehaviour
+public class recursosPersonaje : MonoBehaviour, damagable
 {
     [Header("Vida, Stamina")]
     public float vida;
@@ -143,12 +143,6 @@ public class recursosPersonaje : MonoBehaviour
 
     #endregion stamina
     #region vida
-    public void RestarVida(float daño)
-    {
-        vida -= daño;
-        sombra.bajarVida(vida / vidaMax);
-        if (vida < 0) vida = 0;
-    }
     public void IncrementoVida(float cantidad)
     {
         vidaMax += cantidad;
@@ -190,5 +184,12 @@ public class recursosPersonaje : MonoBehaviour
             yield return null;
         }
     }
-#endregion
+
+    public void getDamaged(int daño)
+    {
+        vida -= daño;
+        sombra.bajarVida(vida / vidaMax);
+        if (vida < 0) vida = 0;
+    }
+    #endregion
 }    
