@@ -31,7 +31,7 @@ public class DeteccionEnemigo : MonoBehaviour
                 float distan = Vector3.Distance(transform.position, puntocercano);
                 if (!Physics.Raycast(transform.position, dir, distan, layers))
                 {
-                    Debug.Log(Vector3.Angle(transform.forward, dir));
+                    //Debug.Log(Vector3.Angle(transform.forward, dir));
                     if (Vector3.Angle(transform.forward, dir) <= angulo)
                     {
                         
